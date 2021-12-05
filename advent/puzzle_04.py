@@ -29,10 +29,12 @@ def get_board_winning_round_and_score(numbers_draw: List[int], board: np.ndarray
             board_score = draw * sum_numbers
             return game_round, board_score
 
+    return (0, 0)
+
 def calculate_board_results(numbers_draw: List[int], boards: List[np.ndarray]) -> Tuple[List[int], List[int]]:
 
-    winning_round = [None] * len(boards)
-    winning_score = [None] * len(boards)
+    winning_round = [0] * len(boards)
+    winning_score = [0] * len(boards)
     for i, board in enumerate(boards):
         game_round, score = get_board_winning_round_and_score(numbers_draw, board)
         winning_round[i] = game_round

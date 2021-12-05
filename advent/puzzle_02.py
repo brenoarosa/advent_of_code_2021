@@ -40,8 +40,8 @@ def get_corrected_final_position(instructions: List[Tuple[str, int]]) -> Tuple[i
 if __name__ == '__main__':
     with open("inputs/input_02.txt") as fin:
         lines = fin.readlines()
-    instructions = [line.rstrip().split(" ") for line in lines]
-    instructions = [(instruction[0], int(instruction[1])) for instruction in instructions]
+    instruction_lines = [line.rstrip().split(" ") for line in lines]
+    instructions = [(instruction[0], int(instruction[1])) for instruction in instruction_lines]
 
     x, y = get_final_position(instructions)
     print(x * y)

@@ -38,7 +38,7 @@ def get_corrected_final_position(instructions: List[Tuple[str, int]]) -> Tuple[i
 
 
 if __name__ == '__main__':
-    with open("input_02.txt") as fin:
+    with open("inputs/input_02.txt") as fin:
         lines = fin.readlines()
     instructions = [line.rstrip().split(" ") for line in lines]
     instructions = [(instruction[0], int(instruction[1])) for instruction in instructions]

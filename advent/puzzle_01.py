@@ -21,7 +21,7 @@ def window_measurements(lines: List[int]) -> List[int]:
 
 
 if __name__ == '__main__':
-    with open("input_01.txt") as fin:
+    with open("inputs/input_01.txt") as fin:
         lines = fin.readlines()
     # cast to int
     lines = [int(line.rstrip()) for line in lines]

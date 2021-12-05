@@ -1,5 +1,5 @@
 import pytest
-from advent.puzzle_04 import parse_input, get_winner_score
+from advent.puzzle_04 import parse_input, get_first_winner_score
 
 example_input = """7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1
 
@@ -41,6 +41,6 @@ def test_parse_input_draws():
     draws, boards = parse_input(example_input)
     assert draws == [7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1]
 
-def test_get_winner_score():
+def test_get_first_winner_score():
     numbers_draw, boards = parse_input(example_input)
-    assert get_winner_score(numbers_draw, boards) == 4512
+    assert get_first_winner_score(numbers_draw, boards) == 4512

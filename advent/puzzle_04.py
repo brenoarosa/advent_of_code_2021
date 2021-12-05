@@ -18,30 +18,42 @@ def parse_input(input_str: str) -> Tuple[List[int], List[np.ndarray]]:
 
     return draws, boards
 
-def get_winner_score(numbers_draw: List[int], boards: List[np.ndarray]) -> int:
+def get_board_winning_round_and_score(numbers_draw: List[int], board: np.ndarray) -> Tuple[int, int]:
+    board_mask = np.zeros((5, 5))
 
-    boards_masks = []
-    for i in range(len(boards)):
-        board_mask = np.zeros((5, 5))
-        boards_masks.append(board_mask)
+    for game_round, draw in enumerate(numbers_draw):
+        board_mask += np.equal(board, draw)
 
-    for draw in numbers_draw:
-        for i, board in enumerate(boards):
-            board_mask = boards_masks[i]
-            board_mask += np.equal(board, draw)
-            boards_masks[i] = board_mask
+        if (5 in board_mask.sum(axis=0)) or (5 in board_mask.sum(axis=1)):
+            sum_numbers = int(((1-board_mask) * board).sum())
+            board_score = draw * sum_numbers
+            return game_round, board_score
 
-            if (5 in board_mask.sum(axis=0)) or (5 in board_mask.sum(axis=1)):
-                sum_numbers = int(((1-board_mask) * board).sum())
-                return draw * sum_numbers
+def calculate_board_results(numbers_draw: List[int], boards: List[np.ndarray]) -> Tuple[List[int], List[int]]:
 
-    return 0
+    winning_round = [None] * len(boards)
+    winning_score = [None] * len(boards)
+    for i, board in enumerate(boards):
+        game_round, score = get_board_winning_round_and_score(numbers_draw, board)
+        winning_round[i] = game_round
+        winning_score[i] = score
 
+    return winning_round, winning_score
 
+def get_first_winner_score(numbers_draw: List[int], boards: List[np.ndarray]) -> int:
+    winning_round, winning_score = calculate_board_results(numbers_draw, boards)
+    winner_board = np.argmin(winning_round)
+    return winning_score[winner_board]
+
+def get_last_winner_score(numbers_draw: List[int], boards: List[np.ndarray]) -> int:
+    winning_round, winning_score = calculate_board_results(numbers_draw, boards)
+    winner_board = np.argmax(winning_round)
+    return winning_score[winner_board]
 
 if __name__ == '__main__':
     with open("inputs/input_04.txt") as fin:
         input_str = fin.read().rstrip()
 
     numbers_draw, boards = parse_input(input_str)
-    print(get_winner_score(numbers_draw, boards))
+    print(get_first_winner_score(numbers_draw, boards))
+    print(get_last_winner_score(numbers_draw, boards))

@@ -1,6 +1,5 @@
 import pytest
-from advent.puzzle_03 import (share_bit, extract_most_matching,
-                              extract_o2_co2, get_total_bits_set)
+from advent.puzzle_03 import (share_bit, extract_o2_co2, get_total_bits_set)
 
 example_reports = [
     0b00100,
@@ -29,17 +28,6 @@ example_reports = [
 ])
 def test_share_bit(test_input, expected):
     assert share_bit(*test_input) == expected
-
-@pytest.mark.parametrize("test_input, expected", [
-    (([0b00000, 0b11100, 0b11000], 0b11100, 5), 0b11100),
-    (([0b00000, 0b11000, 0b10000], 0b11100, 5), 0b11000),
-    (([0b00000, 0b11000, 0b11111], 0b11100, 5), 0b11111),
-    (([0b11111, 0b00000, 0b11000], 0b11100, 5), 0b11111),
-    (([0b11111, 0b00000, 0b11000], 0b01111, 5), 0b00000),
-    ((example_reports, 0b10110, 5), 0b10110),
-])
-def test_extract_most_matching(test_input, expected):
-    assert extract_most_matching(*test_input) == expected
 
 def test_get_total_bits_set():
     total_bits_set = get_total_bits_set(example_reports, 5)

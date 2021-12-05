@@ -27,43 +27,38 @@ def extract_gamma_epsilon(reports: List[int], report_len: int = 12) -> Tuple[int
 
     return gamma, epsilon
 
-
 def share_bit(x: int, y: int, bit_position: int) -> bool:
     return (~(x ^ y) & (1 << bit_position) != 0)
 
-def extract_most_matching(reports: List[int], ref_val: int, report_len: int) -> int:
-    bit_position = report_len - 1
+def extract_life_support(reports: List[int], report_len: int, operator: str) -> int:
 
-    to_str = lambda x: ["{0:05b}".format(i) for i in x]
+    bit_position = report_len - 1
     while len(reports) > 1:
-        print(to_str(reports))
+
+        total_bits_set = get_total_bits_set(reports, report_len)
+
+        most_common_bits_list = [int(v >= (len(reports)/2)) for v in total_bits_set]
+        most_common_bits = sum([v << i for i, v in enumerate(most_common_bits_list)])
+        least_common_bits = ((2 ** report_len) - 1) - most_common_bits
+
+        if operator == "o2":
+            ref_val = most_common_bits
+        elif operator == "co2":
+            ref_val = least_common_bits
+        else:
+            raise Exception("Invalid operator")
+
         reports = [
             report for report in reports
             if share_bit(ref_val, report, bit_position)
         ]
         bit_position -= 1
 
-    print(to_str(reports))
     return reports[0]
 
 def extract_o2_co2(reports: List[int], report_len: int = 12) -> Tuple[int, int]:
-
-    total_bits_set = get_total_bits_set(reports, report_len)
-
-    most_common_bits_list = [int(v >= (len(reports)/2)) for v in total_bits_set]
-    most_common_bits = sum([v << i for i, v in enumerate(most_common_bits_list)])
-
-    least_common_bits_list = [int(v <= (len(reports)/2)) for v in total_bits_set]
-    least_common_bits = sum([v << i for i, v in enumerate(least_common_bits_list)])
-
-    o2 = extract_most_matching(reports, most_common_bits, report_len)
-    co2 = extract_most_matching(reports, least_common_bits, report_len)
-    print("most_common")
-    print("{:012b}".format(most_common_bits))
-    print("{:012b}".format(o2))
-    print("least_common")
-    print("{:012b}".format(least_common_bits))
-    print("{:012b}".format(co2))
+    o2 = extract_life_support(reports, report_len, "o2")
+    co2 = extract_life_support(reports, report_len, "co2")
     return o2, co2
 
 

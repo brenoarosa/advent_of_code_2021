@@ -29,7 +29,6 @@ def get_map_size(vents: List[Vent]) -> Tuple[int, int]:
     X = max([max(v.x1, v.x2) for v in vents]) + 1
     return Y, X
 
-
 def calculate_vent_map(vents: List[Vent], filter_diagonal: bool = True) -> int:
     if filter_diagonal:
         vents = [v for v in vents if ((v.x1 == v.x2) or (v.y1 == v.y2))]
@@ -39,16 +38,13 @@ def calculate_vent_map(vents: List[Vent], filter_diagonal: bool = True) -> int:
     game_map = np.zeros(map_size, dtype=int)
 
     for vent in vents:
-        if vent.x1 == vent.x2:
-            if vent.y2 > vent.y1:
-                mask[vent.y1:vent.y2+1, vent.x1] = 1
-            else:
-                mask[vent.y2:vent.y1+1, vent.x1] = 1
-        else:
-            if vent.x2 > vent.x1:
-                mask[vent.y1, vent.x1:vent.x2+1] = 1
-            else:
-                mask[vent.y1, vent.x2:vent.x1+1] = 1
+        y_order = 2 * int(vent.y2 >= vent.y1) - 1
+        x_order = 2 * int(vent.x2 >= vent.x1) - 1
+
+        y_range = list(range(vent.y1, (vent.y2 + y_order), y_order))
+        x_range = list(range(vent.x1, (vent.x2 + x_order), x_order))
+        mask[y_range, x_range] = 1
+
         game_map += mask
         mask[:, :] = 0
 

@@ -29,21 +29,10 @@ def test_parse_input_draws():
     ]
     assert vents == expected
 
-def test_calculate_vent_map():
-    vents = parse_input(example_input)
-    assert calculate_vent_map(vents) == 5
-
-"""
-@pytest.mark.parametrize("test_input, expected", [
-    ((0b10, 0b10, 0), True),
-    ((0b10, 0b10, 1), True),
-    ((0b10, 0b10, 2), True),
-    ((0b10, 0b11, 0), False),
-    ((0b10, 0b11, 1), True),
-    ((0b10, 0b11, 3), True),
-    ((0b10001, 0b111, 2), False),
+@pytest.mark.parametrize("filter_diagonal, expected", [
+    (True, 5),
+    (False, 12),
 ])
-def test_share_bit(test_input, expected):
-    assert share_bit(*test_input) == expected
-"""
-
+def test_calculate_vent_map(filter_diagonal, expected):
+    vents = parse_input(example_input)
+    assert calculate_vent_map(vents, filter_diagonal) == expected

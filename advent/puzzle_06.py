@@ -1,35 +1,30 @@
 from typing import List
 
 LIFE_CICLE = 7
-INCUBATION_TIME = 8
+INCUBATION_TIME = 9
 
 def parse_input(input_str: str) -> List[int]:
     line = input_str.strip()
     return [int(i) for i in line.split(",")]
 
-def calculate_state(state: List[int], days: int) -> List[int]:
+def calculate_state(state: List[int], days: int) -> int:
+
+    fish_timer_counter = [0] * INCUBATION_TIME
+    for fish_time in state:
+        fish_timer_counter[fish_time] += 1
 
     for day in range(days):
-        print(f"Calculating day={day}")
-        next_state = []
-        new_fishes = 0
-        for fish_time in state:
-            if fish_time == 0:
-                new_fishes += 1
+        next_fish_timer_counter = [0] * INCUBATION_TIME
 
-            if fish_time <= LIFE_CICLE:
-                next_fish_time = (fish_time - 1) % LIFE_CICLE
-            else:
-                next_fish_time = (fish_time - 1)
+        next_fish_timer_counter[INCUBATION_TIME-1] += fish_timer_counter[0]
+        next_fish_timer_counter[LIFE_CICLE-1] += fish_timer_counter[0]
 
-            next_state.append(next_fish_time)
+        for i in range(INCUBATION_TIME-1):
+            next_fish_timer_counter[i] += fish_timer_counter[i+1]
 
-        for _ in range(new_fishes):
-            next_state.append(INCUBATION_TIME)
+        fish_timer_counter = next_fish_timer_counter
 
-        state = next_state
-
-    return state
+    return sum(fish_timer_counter)
 
 
 if __name__ == '__main__':
@@ -37,5 +32,5 @@ if __name__ == '__main__':
         input_str = fin.read().rstrip()
 
     initial_state = parse_input(input_str)
-    print(len(calculate_state(initial_state, 80)))
-    print(len(calculate_state(initial_state, 256)))
+    print(calculate_state(initial_state, 80))
+    print(calculate_state(initial_state, 256))
